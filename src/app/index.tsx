@@ -1,89 +1,92 @@
 // LIBS
-import { useEffect, useRef, useState } from "react"
-import { Alert, View, Keyboard } from "react-native"
-import Bottom from "@gorhom/bottom-sheet"
-import { router } from "expo-router"
-import dayjs from "dayjs"
+import { useEffect, useRef, useState } from "react";
+import { Alert, View, Keyboard } from "react-native";
+import Bottom from "@gorhom/bottom-sheet";
+import { router } from "expo-router";
+import dayjs from "dayjs";
 
 // COMPONENTS
-import { Input } from "@/components/Input"
-import { Header } from "@/components/Header"
-import { Button } from "@/components/Button"
-import { BottomSheet } from "@/components/BottomSheet"
-import { Goals, GoalsProps } from "@/components/Goals"
-import { Transactions, TransactionsProps } from "@/components/Transactions"
+import { Input } from "@/components/Input";
+import { Header } from "@/components/Header";
+import { Button } from "@/components/Button";
+import { BottomSheet } from "@/components/BottomSheet";
+import { Goals, GoalsProps } from "@/components/Goals";
+import { Transactions, TransactionsProps } from "@/components/Transactions";
 
 // UTILS
-import { mocks } from "@/utils/mocks"
+import { mocks } from "@/utils/mocks";
+import { useGoalsRepository } from "@/database/useGoalRepository";
 
 export default function Home() {
   // LISTS
-  const [transactions, setTransactions] = useState<TransactionsProps>([])
-  const [goals, setGoals] = useState<GoalsProps>([])
+  const [transactions, setTransactions] = useState<TransactionsProps>([]);
+  const [goals, setGoals] = useState<GoalsProps>([]);
 
   // FORM
-  const [name, setName] = useState("")
-  const [total, setTotal] = useState("")
+  const [name, setName] = useState("");
+  const [total, setTotal] = useState("");
 
   // BOTTOM SHEET
-  const bottomSheetRef = useRef<Bottom>(null)
-  const handleBottomSheetOpen = () => bottomSheetRef.current?.expand()
-  const handleBottomSheetClose = () => bottomSheetRef.current?.snapToIndex(0)
+  const bottomSheetRef = useRef<Bottom>(null);
+  const handleBottomSheetOpen = () => bottomSheetRef.current?.expand();
+  const handleBottomSheetClose = () => bottomSheetRef.current?.snapToIndex(0);
 
   function handleDetails(id: string) {
-    router.navigate("/details/" + id)
+    router.navigate("/details/" + id);
   }
+
+  const useGoal = useGoalsRepository();
 
   async function handleCreate() {
     try {
-      const totalAsNumber = Number(total.toString().replace(",", "."))
+      const totalAsNumber = Number(total.toString().replace(",", "."));
 
       if (isNaN(totalAsNumber)) {
-        return Alert.alert("Erro", "Valor inválido.")
+        return Alert.alert("Erro", "Valor inválido.");
       }
 
-      console.log({ name, total: totalAsNumber })
+      useGoal.create({ name, total: totalAsNumber });
 
-      Keyboard.dismiss()
-      handleBottomSheetClose()
-      Alert.alert("Sucesso", "Meta cadastrada!")
+      Keyboard.dismiss();
+      handleBottomSheetClose();
+      Alert.alert("Sucesso", "Meta cadastrada!");
 
-      setName("")
-      setTotal("")
+      setName("");
+      setTotal("");
     } catch (error) {
-      Alert.alert("Erro", "Não foi possível cadastrar.")
-      console.log(error)
+      Alert.alert("Erro", "Não foi possível cadastrar.");
+      console.log(error);
     }
   }
 
   async function fetchGoals() {
     try {
-      const response = mocks.goals
-      setGoals(response)
+      const response = useGoal.all();
+      setGoals(response);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   async function fetchTransactions() {
     try {
-      const response = mocks.transactions
+      const response = mocks.transactions;
 
       setTransactions(
         response.map((item) => ({
           ...item,
           date: dayjs(item.created_at).format("DD/MM/YYYY [às] HH:mm"),
         }))
-      )
+      );
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   useEffect(() => {
-    fetchGoals()
-    fetchTransactions()
-  }, [])
+    fetchGoals();
+    fetchTransactions();
+  }, []);
 
   return (
     <View className="flex-1 p-8">
@@ -118,5 +121,5 @@ export default function Home() {
         <Button title="Criar" onPress={handleCreate} />
       </BottomSheet>
     </View>
-  )
+  );
 }

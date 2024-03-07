@@ -24,4 +24,23 @@ export function useTransactionRepository() {
       throw error;
     }
   }
+
+  function findByGoal(goalId: number) {
+    try {
+      const statement = database.prepareSync(
+        "SELECT * FROM transactions WHERE goal_id = $goal_id"
+      );
+
+      const result = statement.executeSync<TransactionResponseDatabaseProps>({
+        $goal_id: goalId,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  return {
+    findLatest,
+    findByGoal,
+  };
 }
