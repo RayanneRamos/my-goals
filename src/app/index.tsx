@@ -16,6 +16,7 @@ import { Transactions, TransactionsProps } from "@/components/Transactions";
 // UTILS
 import { mocks } from "@/utils/mocks";
 import { useGoalsRepository } from "@/database/useGoalRepository";
+import { useTransactionRepository } from "@/database/useTransactionRepository";
 
 export default function Home() {
   // LISTS
@@ -36,6 +37,7 @@ export default function Home() {
   }
 
   const useGoal = useGoalsRepository();
+  const useTransaction = useTransactionRepository();
 
   async function handleCreate() {
     try {
@@ -70,7 +72,7 @@ export default function Home() {
 
   async function fetchTransactions() {
     try {
-      const response = mocks.transactions;
+      const response = useTransaction.findLatest();
 
       setTransactions(
         response.map((item) => ({

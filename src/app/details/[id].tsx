@@ -21,6 +21,7 @@ import { TransactionTypeSelect } from "@/components/TransactionTypeSelect";
 import { mocks } from "@/utils/mocks";
 import { currencyFormat } from "@/utils/currencyFormat";
 import { useGoalsRepository } from "@/database/useGoalRepository";
+import { useTransactionRepository } from "@/database/useTransactionRepository";
 
 type Details = {
   name: string;
@@ -41,6 +42,7 @@ export default function Details() {
   const goalId = Number(routeParams.id);
 
   const useGoal = useGoalsRepository();
+  const useTransaction = useTransactionRepository();
 
   // BOTTOM SHEET
   const bottomSheetRef = useRef<Bottom>(null);
@@ -51,7 +53,7 @@ export default function Details() {
     try {
       if (goalId) {
         const goal = useGoal.show(goalId);
-        const transactions = mocks.transactions;
+        const transactions = useTransaction.findByGoal(goalId);
 
         if (!goal || !transactions) {
           return router.back();
@@ -87,7 +89,7 @@ export default function Details() {
         amountAsNumber = amountAsNumber * -1;
       }
 
-      console.log({ goalId, amount: amountAsNumber });
+      useTransaction.create({ goalId, amount: amountAsNumber });
 
       Alert.alert("Sucesso", "Transação registrada!");
 
