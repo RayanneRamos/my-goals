@@ -16,6 +16,13 @@
 
 [My Goals]() é o segundo projeto do evento de React Native na prática, organizado pela [Rocketseat](www.rocketseat.com.br), que tinha o propósito de construir 2 aplicações em 2 dias. Esse projeto é um app de finanças, que você pode adicionar algumas metas, colocar alguns produtos da sua wishlist e ali você adiciona o quanto de dinheiro vai sobrar no mês para comprar um determinado produto. Nesse app você pode tanto adicionar um saldo e também retirar o dinheiro para alguma emergência.
 
+## 🌟 Funcionalidades
+
+1. **Adicione metas financeiras** 
+2. **Crie uma wishlist com produtos desejados** 
+3. **Gerencie o saldo disponível no mês**
+4. **Registre saques para emergências**
+
 ## 🧪 Technologies
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
