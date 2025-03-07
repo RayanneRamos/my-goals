@@ -23,7 +23,7 @@
 3. **Gerencie o saldo disponível no mês**
 4. **Registre saques para emergências**
 
-## 🧪 Technologies
+## 🧪 Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
 
